@@ -1,9 +1,10 @@
 package com.elrichpy.item30;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.UnaryOperator;
 
 public class GenericMethods {
+    private static final UnaryOperator<Object> IDENTITY_FN = (t) -> t;
     public static void main(String[] args) {
         Set<String> set1 = Set.of("John", "Dave");
         Set<String> set2 = Set.of("Bob");
@@ -15,6 +16,9 @@ public class GenericMethods {
         Set<A> setWildcard3 = unionWithWildCard(setWildcard1, setWildcard2);
 //        Set<A> doesntWork = union(setWildcard1, setWildcard2);
         System.out.println(setWildcard3);
+
+        String maxString = max(List.of("A", "B", "C")).orElse("No max found!");
+        Optional<Integer> maxInteger = max(List.of(4, 22, 1));
     }
 
 
@@ -43,6 +47,18 @@ public class GenericMethods {
         B (String name) {super(name);}
 
     }
+    @SuppressWarnings("unchecked")
+    public static <T> UnaryOperator<T> identityFunction() {
+        return (UnaryOperator<T>) IDENTITY_FN;
+    }
+    // Recursive type bounds
+    public static <E extends Comparable<E>> Optional<E> max(Collection<E> collection) {
 
+        if (collection.isEmpty()){
+            return Optional.empty();
+        }
+        return collection.stream().max(Comparable::compareTo);
+
+    }
 
 }
